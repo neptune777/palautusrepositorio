@@ -1,0 +1,20 @@
+.countries-page {
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.countries-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  border: 1px solid;
+}
+
+button {
+  margin-left: 5px;
+}
