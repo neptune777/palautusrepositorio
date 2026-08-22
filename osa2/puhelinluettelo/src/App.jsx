@@ -96,8 +96,14 @@ const App = () => {
         .deletePerson(id)
         .then(deletedPerson => {
           setPersons(persons.filter(person => person.id !== id))
-          setStyle({ ...style, color: 'green' })
-          setNotification(`${deletedPerson.name} was deleted`)
+          const deletedPerson_ = persons.find(person => person.id == id)
+          if (deletedPerson_) {
+            setStyle({ ...style, color: 'green' })
+            setNotification(`${deletedPerson_.name} was deleted`)
+          } else {
+            setStyle({ ...style, color: 'red' })
+            setNotification(`The person was probably deleted but could not find it from memory.`)
+          }
           removeNotificationAfterAMoment();
         })
         .catch(error => {
