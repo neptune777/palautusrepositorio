@@ -1,0 +1,7 @@
+PUT http://127.0.0.1:3001/api/persons/6a8b9d3de7dcd670af52c0d3
+Content-Type: application/json
+
+{
+  "name": "Juhani Manninen",
+  "number": "040-5983278"
+}
