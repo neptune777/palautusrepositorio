@@ -23,13 +23,22 @@ const App = () => {
     marginBottom: '10px'
   })
 
+  const removeNotificationAfterAMoment = () => {
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
+  }
+
   useEffect(() => {
     personsService
       .getAll()
       .then(response => setPersons(response))
       .catch(error => {
         console.log(`Could not fetch data from server. Error: ${error}`)
-        setStyle({ ...style, color: 'red' })
+        setStyle(currentStyle => ({
+          ...currentStyle,
+          color: 'red',
+        }))
         setNotification(`Could not fetch data from server.`)
         removeNotificationAfterAMoment();
       })
@@ -41,12 +50,6 @@ const App = () => {
   const handleNewSearchWordChange = (event) => setNewSearchWord(event.target.value)
 
   const personExists = (name) => persons.some(person => person.name === name)
-
-  const removeNotificationAfterAMoment = () => {
-    setTimeout(() => {
-      setNotification(null)
-    }, 3000)
-  }
 
   const addNewName = (event) => {
     event.preventDefault()
@@ -81,29 +84,26 @@ const App = () => {
           removeNotificationAfterAMoment();
         })
         .catch(error => {
-          console.log(`Could not add ${newName}. Error: ${error}`)
           setStyle({ ...style, color: 'red' })
-          setNotification(`Could not add ${newName}.`)
+          setNotification(error.response.data.error)
           removeNotificationAfterAMoment()
         })
     }
   }
 
   const deletePerson = (id) => {
-
-    if (window.confirm(`Delete ${persons.find((person) => person.id === id).name}?`)) {
+    const deletablePerson = persons.find((person) => person.id === id)
+    if (window.confirm(`Delete ${deletablePerson.name}?`)) {
       personsService
         .deletePerson(id)
-        .then(deletedPerson => {
-          setPersons(persons.filter(person => person.id !== id))
-          const deletedPerson_ = persons.find(person => person.id == id)
-          if (deletedPerson_) {
-            setStyle({ ...style, color: 'green' })
-            setNotification(`${deletedPerson_.name} was deleted`)
-          } else {
-            setStyle({ ...style, color: 'red' })
-            setNotification(`The person was probably deleted but could not find it from memory.`)
-          }
+        .then(() => {
+          const newPersons = persons.filter(person => person.id !== id)
+          setPersons(newPersons)
+          setNewSearchWord('')
+
+          setStyle({ ...style, color: 'green' })
+          setNotification(`${deletablePerson.name} was deleted`)
+
           removeNotificationAfterAMoment();
         })
         .catch(error => {
