@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Smitten Kitchen",
+  "author":"Deb Perelman",
+  "likes": 62,
+  "url": "https://smittenkitchen.com/"
+}

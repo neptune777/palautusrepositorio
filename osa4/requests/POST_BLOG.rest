@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Miia Tsunami",
+  "author":"Miia Simunaniemi",
+  "likes": 34,
+  "url": "https://thetrek.co/author/miia-simunaniemi/"
+}

@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "PS I'm on my way",
+  "author":"Trisha Velarmino",
+  "likes": 36,
+  "url": "https://www.psimonmyway.com/"
+}
