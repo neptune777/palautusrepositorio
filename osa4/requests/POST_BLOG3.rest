@@ -1,5 +1,6 @@
 POST http://127.0.0.1:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkVhc3lVc2VyTmFtZTUiLCJpZCI6IjZhYTc0YjI5ZjE2MWZiZGNjODE1MGIzZiIsImlhdCI6MTc4OTM0ODY1OH0.AZbzwo6EUDAXPqIowtR1a326Dxw9QfxcgZKQBCjkAlw
 
 {
   "title": "PS I'm on my way",
