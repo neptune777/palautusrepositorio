@@ -51,6 +51,9 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
 
 blogRouter.put('/:id', async (request, response) => {
     const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+        return response.status(404).json({ error: 'blog not found' })
+    }
     const { title, author, url, likes } = request.body
     blog.author = author
     blog.title = title

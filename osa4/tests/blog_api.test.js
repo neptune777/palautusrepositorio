@@ -133,9 +133,9 @@ describe('blog api tests', () => {
 
   test('blog identifier is id', async () => {
     const response = await api.get('/api/blogs')
-    const propertyNamesOfFirst = Object.getOwnPropertyNames(response.body[0])
-    const fieldThatIncludeId = propertyNamesOfFirst.find(propertyName => propertyName.includes('id'))
-    assert.strictEqual(fieldThatIncludeId, 'id')
+    const idIsValidInAllCases = response.body.every(blog => Object.hasOwn(blog, 'id') && !Object.hasOwn(blog, '_id')
+    )
+    assert.strictEqual(idIsValidInAllCases, true)
   })
 
   test('new blog will be saved to database', async () => {
@@ -174,10 +174,30 @@ describe('blog api tests', () => {
         return propertyName
       }
     })
-    assert.ok(propertyNamesOfFirst.includes('title')
+
+    const allPropertyValuesOk = Object.getOwnPropertyNames(response.body).every(propertyName => {
+      if (propertyName === 'title') {
+        return response.body.title === 'Miia Tsunami'
+      }
+      if (propertyName === 'author') {
+        return response.body.author === 'Miia Simunaniemi'
+      }
+      if (propertyName === 'likes') {
+        return response.body.likes === 34
+      }
+      if (propertyName === 'url') {
+        return response.body.url === 'https://thetrek.co/author/miia-simunaniemi/'
+      } else if (propertyName === 'user' || propertyName === 'id') { // these fields do not exist in the sent blog so they can be ignored
+        return true
+      }
+    })
+
+    assert.ok(allPropertyValuesOk
+      && propertyNamesOfFirst.includes('title')
       && propertyNamesOfFirst.includes('author')
       && propertyNamesOfFirst.includes('likes')
-      && propertyNamesOfFirst.includes('url'))
+      && propertyNamesOfFirst.includes('url')
+    )
   })
 
   test(`the field 'likes' will be initialized with 0 in case no value`, async () => {
@@ -287,11 +307,16 @@ describe('blog api tests', () => {
     const response = await api.put(`/api/blogs/${modifiable.id}`)
       .send(modifiable)
       .expect(200)
-
+    const modified = await Blog.findById(modifiable.id)
+    assert.ok(modified)
     assert.ok(response.body.likes === modifiable.likes
+      && modified.likes === modifiable.likes
       && response.body.author === modifiable.author
+      && modified.author === modifiable.author
       && response.body.title === modifiable.title
-      && response.body.url === modifiable.url)
+      && modified.title === modifiable.title
+      && response.body.url === modifiable.url
+      && modified.url === modifiable.url)
   })
 })
 
