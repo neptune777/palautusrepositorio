@@ -19,6 +19,7 @@ const asObject = anecdote => ({
 })
 
 const useAnecdoteStore = create((set) => ({
+  searchString: '',
   anecdotes: anecdotesAtStart.map(asObject),
   actions: {
     addVote: id => set(state => ({
@@ -26,9 +27,14 @@ const useAnecdoteStore = create((set) => ({
     })),
     addAnecdote: newAnecdote => set(state => ({
       anecdotes: [...state.anecdotes, asObject(newAnecdote)]
-    }))
+    })),
+    searchStringChange: newSearchString => set(() => ({ searchString: newSearchString }))
   },
 }))
 
-export const useAnecdotes = () => useAnecdoteStore((state) => state.anecdotes)
+export const useAnecdotes = () => {
+  const anecdotes = useAnecdoteStore(state => state.anecdotes)
+  const searchString = useAnecdoteStore(state => state.searchString)
+  return anecdotes.filter(anecdote => anecdote.content.includes(searchString))
+}
 export const useActions = () => useAnecdoteStore((state) => state.actions)
