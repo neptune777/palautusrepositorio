@@ -10,13 +10,18 @@ const asObject = anecdote => ({
   votes: 0
 })
 
-const useAnecdoteStore = create((set) => ({
+const useAnecdoteStore = create((set, get) => ({
   searchString: '',
   anecdotes: [],
   actions: {
-    addVote: id => set(state => ({
-      anecdotes: state.anecdotes.map(anecdote => anecdote.id === id ? { ...anecdote, votes: anecdote.votes + 1 } : anecdote)
-    })),
+    addVote: async id => {
+      const modifiableAnecdote = get().anecdotes.find(anecdote => anecdote.id === id)
+      const modifiableAnecdoteFinal = { ...modifiableAnecdote, votes: modifiableAnecdote.votes + 1 }
+      const modifiedAnecdote = await anecdoteService.update(id, modifiableAnecdoteFinal)
+      set(state => ({
+        anecdotes: state.anecdotes.map(anecdote => anecdote.id === id ? modifiedAnecdote : anecdote)
+      }))
+    },
     addAnecdote: async newAnecdote => {
       const newAnecdoteAsObject = asObject(newAnecdote)
       const sentAnecdote = await anecdoteService.create(newAnecdoteAsObject)

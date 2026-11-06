@@ -19,4 +19,17 @@ const create = async newAnecdote => {
     }
     return await sentAnecdote.json()
 }
-export default { getAll, create }
+
+const update = async (id, modifiableAnecdote) => {
+    const options = {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+        body: JSON.stringify(modifiableAnecdote)
+    }
+    const response = await fetch(`${baseUrl}/${id}`, options)
+    if (!response.ok) {
+        throw new Error('Could not modify the anecdote')
+    }
+    return response.json()
+}
+export default { getAll, create, update }
