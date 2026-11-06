@@ -3,11 +3,16 @@ const AnecdoteForm = () => {
 
     const { addAnecdote } = useActions()
 
-    const addNewAnecdote = (e) => {
+    const addNewAnecdote = async (e) => {
         e.preventDefault()
-        const newAnecdote = e.target.fieldForNewAnecdote.value
-        addAnecdote(newAnecdote)
-        e.target.reset()
+        const form = e.target
+        const newAnecdote = form.fieldForNewAnecdote.value
+        try {
+            await addAnecdote(newAnecdote)
+            form.reset()
+        } catch (error) {
+            console.log('Could not add new anecdote. Error: ', error)
+        }
     }
     return (
         <>
