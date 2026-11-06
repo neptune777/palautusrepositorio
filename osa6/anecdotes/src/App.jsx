@@ -1,8 +1,16 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Filter from './components/Filter'
+import { useEffect } from 'react'
+import { useActions } from './store'
 
 const App = () => {
+
+  const { initialize } = useActions()
+
+  useEffect(() => {
+    initialize()
+  }, [initialize])
 
   return (
     <div>
