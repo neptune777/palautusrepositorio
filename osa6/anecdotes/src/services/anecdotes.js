@@ -32,4 +32,17 @@ const update = async (id, modifiableAnecdote) => {
     }
     return response.json()
 }
-export default { getAll, create, update }
+
+const remove = async (id) => {
+    const options = {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'DELETE'
+    }
+    const response = await fetch(`${baseUrl}/${id}`, options)
+
+    if (!response.ok) {
+        throw new Error('Could not delete the anecdote')
+    }
+    return response.json()
+}
+export default { getAll, create, update, remove }
