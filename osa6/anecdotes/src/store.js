@@ -56,7 +56,7 @@ export const useAnecdotes = () => {
 
   const anecdotes = useAnecdoteStore(state => state.anecdotes)
   const searchString = useAnecdoteStore(state => state.searchString)
-  console.log('Anecdotes:', anecdotes)
+
   return anecdotes.filter(anecdote => anecdote.content.includes(searchString))
 }
 export const usePendingIDs = () => useAnecdoteStore(state => state.pendingIds)

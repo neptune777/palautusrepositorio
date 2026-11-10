@@ -19,7 +19,7 @@ const AnecdoteList = () => {
                 throw new Error('Could not find the anecdote.')
             }
             await addVote(id)
-            setNotification({ content: `You voted '${anecdote.content}'`, type: 'success' })
+            setNotification({ content: `you voted '${anecdote.content}'`, type: 'success' })
 
         } catch (error) {
             console.error('Voting failed:', error)
