@@ -2,6 +2,14 @@
 import { create } from 'zustand'
 import anecdoteService from './services/anecdotes'
 
+const logger = (config) => (set, get) => config(
+  (...args) => {
+    console.log('prev state', get());
+    set(...args);
+    console.log('next state', get());
+  },
+  get
+);
 const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = anecdote => ({
@@ -10,7 +18,7 @@ const asObject = anecdote => ({
   votes: 0
 })
 
-const useAnecdoteStore = create((set, get) => ({
+const useAnecdoteStore = create(logger((set, get) => ({
   searchString: '',
   anecdotes: [],
   pendingIds: [], // state for preventing missing of fast clicks
@@ -50,8 +58,8 @@ const useAnecdoteStore = create((set, get) => ({
       set(() => ({ anecdotes }))
     },
   },
-}))
-
+})))
+export default useAnecdoteStore
 export const useAnecdotes = () => {
 
   const anecdotes = useAnecdoteStore(state => state.anecdotes)
