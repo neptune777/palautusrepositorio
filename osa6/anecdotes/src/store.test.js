@@ -29,4 +29,21 @@ describe('useActions', () => {
         const { result: anecdotesResult } = renderHook(() => useAnecdotes())
         expect(anecdotesResult.current).toEqual(mockAnecdotes)
     })
+
+    it('anecdotes received from the store are sorted by votes', async () => {
+        const mockAnecdotes = [{ content: 'Test', id: '47145', votes: 0 }, { content: 'Test2', id: '47146', votes: 2 }, { content: 'Test3', id: '47147', votes: 1 }]
+        anecdoteService.getAll.mockResolvedValue(mockAnecdotes)
+
+        const { result } = renderHook(() => useActions())
+        await act(async () => {
+            await result.current.initialize()
+        })
+
+        const { result: anecdotesResult } = renderHook(() => useAnecdotes())
+        expect(anecdotesResult.current).toEqual( // toEqual() fails if the arrays are not in the same order
+            [{ content: 'Test2', id: '47146', votes: 2 },
+            { content: 'Test3', id: '47147', votes: 1 },
+            { content: 'Test', id: '47145', votes: 0 }
+            ])
+    })
 })

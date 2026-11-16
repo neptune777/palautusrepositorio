@@ -37,25 +37,28 @@ const useAnecdoteStore = create(logger((set, get) => ({
       const modifiableAnecdote = get().anecdotes.find(anecdote => anecdote.id === id)
       const modifiableAnecdoteFinal = { ...modifiableAnecdote, votes: modifiableAnecdote.votes + 1 }
       const modifiedAnecdote = await anecdoteService.update(id, modifiableAnecdoteFinal)
-      set(state => ({
-        anecdotes: state.anecdotes.map(anecdote => anecdote.id === id ? modifiedAnecdote : anecdote)
+      const newArrayOfAnecdotes = get().anecdotes.map(anecdote => anecdote.id === id ? modifiedAnecdote : anecdote)
+      set(() => ({
+        anecdotes: newArrayOfAnecdotes.toSorted((anecdote1, anecdote2) => anecdote2.votes - anecdote1.votes)
       }))
     },
     addAnecdote: async newAnecdote => {
       const newAnecdoteAsObject = asObject(newAnecdote)
       const sentAnecdote = await anecdoteService.create(newAnecdoteAsObject)
-      set(state => ({
-        anecdotes: [...state.anecdotes, sentAnecdote]
+      const newArrayOfAnecdotes = [...get().anecdotes, sentAnecdote]
+      set(() => ({
+        anecdotes: newArrayOfAnecdotes.toSorted((anecdote1, anecdote2) => anecdote2.votes - anecdote1.votes)
       }))
     },
     deleteAnecdote: async id => {
       const deletedAnecdote = await anecdoteService.remove(id)
-      set(state => ({ anecdotes: state.anecdotes.filter(anecdote => anecdote.id !== deletedAnecdote.id) }))
+      set((state) => ({ anecdotes: state.anecdotes.filter(anecdote => anecdote.id !== deletedAnecdote.id) }))
     },
     searchStringChange: newSearchString => set(() => ({ searchString: newSearchString })),
     initialize: async () => {
-      const anecdotes = await anecdoteService.getAll()
-      set(() => ({ anecdotes }))
+      const result = await anecdoteService.getAll()
+      const sortedAnecdotes = result.toSorted((anecdote1, anecdote2) => anecdote2.votes - anecdote1.votes)
+      set(() => ({ anecdotes: sortedAnecdotes }))
     },
   },
 })))

@@ -4,7 +4,7 @@ import Notification from './Notification'
 
 const AnecdoteList = () => {
 
-    const anecdotes = useAnecdotes().toSorted((anecdote1, anecdote2) => anecdote2.votes - anecdote1.votes)
+    const anecdotes = useAnecdotes()
     const pendingIds = usePendingIDs() // state for preventing missing of fast clicks   
     const { setNotification } = useActionsOfNotification()
     const notification = useNotification()
