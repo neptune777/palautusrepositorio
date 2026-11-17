@@ -46,4 +46,27 @@ describe('useActions', () => {
             { content: 'Test', id: '47145', votes: 0 }
             ])
     })
+
+    it('React component receives a properly filtered list of anecdotes', async () => {
+        const mockAnecdotes = [{ content: 'Random anecdote', id: '47145', votes: 0 }, { content: 'Mock anecdote', id: '47146', votes: 2 }, { content: 'Artificial anecdote', id: '47147', votes: 1 }]
+        anecdoteService.getAll.mockResolvedValue(mockAnecdotes)
+
+        const { result } = renderHook(() => useActions())
+        await act(async () => {
+            await result.current.initialize()
+            useAnecdoteStore.setState({ searchString: 'Ra' })
+        })
+        const { result: anecdotesResult } = renderHook(() => useAnecdotes())
+        expect(anecdotesResult.current).toEqual([{ content: 'Random anecdote', id: '47145', votes: 0 }])
+
+        await act(async () => {
+            useAnecdoteStore.setState({ searchString: 'ck' })
+        })
+        expect(anecdotesResult.current).toEqual([{ content: 'Mock anecdote', id: '47146', votes: 2 }])
+        
+        await act(async () => {
+            useAnecdoteStore.setState({ searchString: 'ti' })
+        })
+        expect(anecdotesResult.current).toEqual([{ content: 'Artificial anecdote', id: '47147', votes: 1 }])
+    })
 })
