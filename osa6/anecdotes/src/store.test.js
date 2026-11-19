@@ -4,6 +4,7 @@ import { renderHook, act } from '@testing-library/react'
 vi.mock('./services/anecdotes', () => ({
     default: {
         getAll: vi.fn(),
+        update: vi.fn()
     }
 }))
 
@@ -63,10 +64,25 @@ describe('useActions', () => {
             useAnecdoteStore.setState({ searchString: 'ck' })
         })
         expect(anecdotesResult.current).toEqual([{ content: 'Mock anecdote', id: '47146', votes: 2 }])
-        
+
         await act(async () => {
             useAnecdoteStore.setState({ searchString: 'ti' })
         })
         expect(anecdotesResult.current).toEqual([{ content: 'Artificial anecdote', id: '47147', votes: 1 }])
+    })
+
+    it('Voting increases the number of votes for an anecdote', async () => {
+        const mockAnecdotes = [{ content: 'Test anecdote', id: '47145', votes: 0 }]
+        anecdoteService.getAll.mockResolvedValue(mockAnecdotes)
+        anecdoteService.update.mockResolvedValue({ ...mockAnecdotes[0], votes: 1 })
+
+        const { result } = renderHook(() => useActions())
+        await act(async () => {
+            await result.current.initialize()
+            await result.current.addVote(mockAnecdotes[0].id)
+        })
+        const { result: anecdotesResult } = renderHook(() => useAnecdotes())
+        expect(anecdotesResult.current).toEqual([{ content: 'Test anecdote', id: '47145', votes: 1 }])
+        expect(anecdoteService.update).toHaveBeenCalledWith(mockAnecdotes[0].id, { ...mockAnecdotes[0], votes: 1 })
     })
 })
