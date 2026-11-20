@@ -7,4 +7,16 @@ const getAll = async () => {
     }
     return response.json()
 }
-export { getAll }
+const createAnecdote = async (anecdote) => {
+    const options = {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(anecdote)
+    }
+    const response = await fetch(baseUrl, options)
+    if (!response.ok) {
+        throw new Error('Could not send new anecdote to server')
+    }
+    return response.json()
+}
+export { getAll, createAnecdote }
