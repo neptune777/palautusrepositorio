@@ -4,10 +4,11 @@ import { useAnecdotes } from './hooks/useAnecdotes'
 
 const App = () => {
 
-  const { anecdotes, isPending, isError } = useAnecdotes()
+  const { anecdotes, isPending, isError, voteAnecdote } = useAnecdotes()
 
   const handleVote = (anecdote) => {
-    console.log('vote')
+    const votedAnecdote = { ...anecdote, votes: anecdote.votes + 1 }
+    voteAnecdote(votedAnecdote, anecdote.id)
   }
   if (isError) {
     return <Notification text={'anecdote service not available due to problems in server'} />
