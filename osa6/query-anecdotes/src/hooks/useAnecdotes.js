@@ -14,7 +14,7 @@ export const useAnecdotes = () => {
         onSuccess: (newAnecdote) => {
             const anecdotes = queryClient.getQueryData(['anecdotes'])
             queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
-            setNotificationProcess(`A new anecdote '${newAnecdote.content}' added`)
+            setNotificationProcess(`A new anecdote '${newAnecdote.content}' created`)
         },
         onError: error => {
             setNotificationProcess(error.message)
