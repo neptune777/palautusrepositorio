@@ -1,7 +1,7 @@
-import useNotification from '../hooks/useAnecdotesContextAPI'
+import useNotify from '../hooks/useNotify'
 const Notification = () => {
 
-  const { notification } = useNotification()
+  const { notification } = useNotify()
 
   const style = {
     border: "solid",
