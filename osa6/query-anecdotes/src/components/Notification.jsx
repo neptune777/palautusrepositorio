@@ -1,4 +1,8 @@
-const Notification = ({ text }) => {
+import useNotification from '../hooks/useAnecdotesContextAPI'
+const Notification = () => {
+
+  const { notification } = useNotification()
+
   const style = {
     border: "solid",
     padding: 10,
@@ -6,9 +10,9 @@ const Notification = ({ text }) => {
     marginBottom: 5,
   }
 
-  if (!text) return null
+  if (!notification) return null
 
-  return <div data-testid="notification" style={style}>{text}</div>
+  return <div data-testid="notification" style={style}>{notification}</div>
 }
 
 export default Notification

@@ -11,13 +11,16 @@ const App = () => {
     voteAnecdote(votedAnecdote, anecdote.id)
   }
   if (isError) {
-    return <Notification text={'anecdote service not available due to problems in server'} />
+    return <div>Anecdote service not available due to problems in server</div>
+  }
+  if (isPending && !isError) {
+    return <div>Fetching data from the server</div>
   }
   const normalRender = !isPending && !isError
   return (
     <div>
       <h3>Anecdote app</h3>
-      {isPending && !isError && (<Notification text={'Fetching data from the server'} />)}
+      <Notification />
       {normalRender &&
         <AnecdoteForm />
       }
