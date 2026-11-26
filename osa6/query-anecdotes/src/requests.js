@@ -15,7 +15,8 @@ const createAnecdote = async (anecdote) => {
     }
     const response = await fetch(baseUrl, options)
     if (!response.ok) {
-        throw new Error('Could not send new anecdote to server')
+        const data = await response.json()
+        throw new Error(data.error ?? 'Could not send new anecdote to server')
     }
     return response.json()
 }

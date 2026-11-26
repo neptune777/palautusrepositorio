@@ -15,6 +15,9 @@ export const useAnecdotes = () => {
             const anecdotes = queryClient.getQueryData(['anecdotes'])
             queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
             setNotificationProcess(`A new anecdote '${newAnecdote.content}' added`)
+        },
+        onError: error => {
+            setNotificationProcess(error.message)
         }
     })
     const votingAnecdoteMutation = useMutation({
